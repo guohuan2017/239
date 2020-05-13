@@ -84,10 +84,10 @@ public class RedisUtils {
 	 * @param key   Redis键
 	 * @param value 值
 	 */
-	@Autowired
-	Logger LOG;
+//	@Autowired
+//	Logger LOG;
 	public void set(final String key, final Object value) {
-		LOG.warn("hllo");
+//		LOG.warn("hllo");
 		redisTemplate.opsForValue().set(key, value, 1, TimeUnit.MINUTES);
 	}
 

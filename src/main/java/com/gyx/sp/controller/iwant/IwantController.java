@@ -21,29 +21,23 @@ import com.gyx.sp.dao.iwant.Iwant;
 import com.gyx.sp.redis.RedisUtils;
 
 
-
-
-
 @RestController
 @RequestMapping("/iwant")
-@Configuration
 public class IwantController implements ApplicationContextAware {
 
-	@Bean
-	public Logger getLogger() {
-		return LoggerFactory.getLogger("hillo");
-	}
+
 
 	@Autowired
 	private RedisUtils redisUtils;
 
-	@Autowired
-	Logger LOG;
+//	@Autowired
+//	Logger LOG;
+//	@Autowired
+//	Eu eu;
 	
-
 	@RequestMapping(value = "/in",produces="application/json;charset=UTF-8")
 	public List in(Iwant iwant) {
-		LOG.warn("hello");
+//		LOG.warn("hello");
 		redisUtils.hPutAll(iwant.getName(), new BeanUtilsHashMapper(Iwant.class).toHash(iwant));
 		Collection<Object> arrayList = new ArrayList<Object>();
 		arrayList.add("name");
@@ -63,10 +57,19 @@ public class IwantController implements ApplicationContextAware {
 		arrayList.add("iwant");
 		arrayList.add("contact");
 		redisUtils.set("aa", "bb");
+		if(iwant.getName().equals("郭永雄")) {
+			try {
+				Eu.main();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return redisUtils.hMultiGet(iwant.getName(), arrayList);
 //		return (String) redisUtils.get("aa");
 //		RedisUtils.hMultiGet(iwant.getName(), arrayList)
 	}
+	
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
