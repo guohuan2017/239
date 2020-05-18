@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,13 +22,13 @@ import org.springframework.http.HttpHeaders;
 
 class Eu {
 	static String tokenString = "memor";
-	static String tokenString2 = "谢思娜";
-
+	static String tokenString2 ="谢思娜";
 	static String contentTokenString = "发私信";
-	static File file = new File("log.txt");
+	static File pathFile = new File("log.txt");
 	static int size = 25;
-	static AtomicInteger j = new AtomicInteger(150773);
-	static int yeshu = 151273;
+	static AtomicInteger j = new AtomicInteger(154682);
+//	static int yeshu = 154682;
+	static StringBuffer stringBuffer = new StringBuffer();
 
 	/**
 	 * @author gyx
@@ -38,9 +39,37 @@ class Eu {
 		static int aa = 2;
 		private static ThreadLocal<Temp> temp = new ThreadLocal<Temp>();
 		FileChannel fileChannel1 = null;
+//		FileOutputStream fileOutputStream1 = null;
+		IOListener<String> ioListener = new IOListener<String>() {
 
-		public MyThread(int i, final FileChannel fileChannel) {
+			@Override
+			public void onLoading(String readedPart, long current, long length) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onInterrupted() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFail(String errorMsg) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onCompleted(String result) {
+				// TODO Auto-generated method stub
+
+			}
+		};
+
+		public MyThread(FileChannel fileChannel) {
 //			aa = i;
+//			fileOutputStream1 = fileOutputStream;
 			fileChannel1 = fileChannel;
 		}
 
@@ -52,6 +81,7 @@ class Eu {
 			int index2;
 			String string4;
 			String hrefString;
+			int i;
 
 			public int getBb() {
 				return bb;
@@ -59,6 +89,15 @@ class Eu {
 
 			public Temp setBb(int bb) {
 				this.bb = bb;
+				return this;
+			}
+
+			public int getI() {
+				return i;
+			}
+
+			public Temp setI(int i) {
+				this.i = i;
 				return this;
 			}
 
@@ -125,11 +164,11 @@ class Eu {
 		@Override
 		public void run() {
 			temp.set(new Temp());
-			while (j.get() <= yeshu) {
-				synchronized (tokenString2) {
-					temp.set(temp.get().setBb(j.getAndIncrement()));
+			while (j.get() > 0) {
+				synchronized (contentTokenString) {
+					temp.set(temp.get().setBb(j.getAndDecrement()));
 				}
-				if (temp.get().getBb() <= yeshu && temp.get().getBb() > 0) {
+				if (temp.get().getBb() > 0) {
 					temp.set(temp.get()
 							.setStr1((doPost("http://www.worlduc.com/space_newuser_more.aspx?EnterpriseType="
 									+ String.valueOf(aa) + "&Page=" + String.valueOf(temp.get().getBb()), "")
@@ -137,33 +176,74 @@ class Eu {
 					// 判断内容页面是否加载成功
 					temp.set(temp.get().setIndex11(Integer.valueOf(temp.get().getStr1().indexOf(contentTokenString))));
 					while (temp.get().getIndex11() == -1) {
+//						stringBuffer.append(System.currentTimeMillis() + " wait "
+//								+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + "\r\n");
+
+//						IOUtils.instance.writeStr2ReplaceFileSync((System.currentTimeMillis() + " wait "
+//								+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + "\r\n"), fileChannel1,
+//								ioListener);
+//						try {
+//							synchronized (tokenString) {
+//								fileChannel1.write(ByteBuffer.wrap((System.currentTimeMillis() + " wait "
+//										+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + "\r\n")
+//												.toString().getBytes("UTF-8")));
+//								fileOutputStream1.flush();
+//							}
 						try {
 							synchronized (tokenString) {
-							fileChannel1.write(ByteBuffer.wrap((System.currentTimeMillis() + " wait " + String.valueOf(aa) + " "
-									+ String.valueOf(temp.get().getBb()) + "\r\n").toString().getBytes("UTF-8")));
+								fileChannel1.write(ByteBuffer.wrap((System.currentTimeMillis() + " wait "
+										+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + "\r\n")
+												.toString().getBytes("UTF-8")));
 							}
-							Thread.sleep(1000);
-						} catch (InterruptedException | IOException e) {
+							temp.set(temp.get().setI(temp.get().getI()+1));
+							Thread.sleep(temp.get().getI()*1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+//						} catch (InterruptedException | IOException e) {
+						// TODO Auto-generated catch block
+//							e.printStackTrace();
+						// 重新加载
 						temp.set(temp.get()
 								.setStr1((doPost(
 										"http://www.worlduc.com/space_newuser_more.aspx?EnterpriseType="
 												+ String.valueOf(aa) + "&Page=" + String.valueOf(temp.get().getBb()),
 										"").toLowerCase())));
-						// 判断内容页面是否加载成功
 						temp.set(temp.get()
 								.setIndex11(Integer.valueOf(temp.get().getStr1().indexOf(contentTokenString))));
 					}
-					synchronized (tokenString) {
-						try {
-							fileChannel1.write(ByteBuffer.wrap((String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
-									+ String.valueOf(temp.get().getBb()) + "\r\n").toString().getBytes("UTF-8")));
-						} catch (Exception e) { // TODO: handle exception
 
+					// 加载成功
+
+					try {
+						synchronized (tokenString) {
+							fileChannel1.write(ByteBuffer
+									.wrap((String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
+											+ String.valueOf(temp.get().getBb()) + "\r\n").getBytes("UTF-8")));
+//							fileChannel1.write(ByteBuffer
+//									.wrap(temp.get().getStr1().getBytes("UTF-8")));
 						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+
 					}
+//					stringBuffer.append(String.valueOf(System.currentTimeMillis()) + " "
+//							+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + "\r\n");
+//					IOUtils.instance.writeStr2ReplaceFileSync((String.valueOf(System.currentTimeMillis()) + " "
+//							+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + "\r\n"), fileChannel1,
+//							ioListener);
+//							}
+//						} catch (Exception e) { // TODO: handle exception
+					//
+//						}
 
 					temp.set(temp.get().setIndex1(temp.get().getStr1().indexOf(tokenString)));
 					temp.set(temp.get().setIndex2(temp.get().getStr1().indexOf(tokenString2)));
@@ -172,14 +252,23 @@ class Eu {
 
 						temp.set(temp.get().setHrefString(
 								temp.get().getString4().substring(temp.get().getString4().lastIndexOf("<a href=\""))));
-						synchronized (tokenString) {
-							try {
-								fileChannel1.write(ByteBuffer.wrap((String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
-										+ String.valueOf(temp.get().getBb()) + " " + temp.get().getHrefString() + "\r\n").toString().getBytes("UTF-8")));
-							} catch (Exception e) { // TODO: handle exception
 
+						try {
+							synchronized (tokenString) {
+								fileChannel1.write(ByteBuffer.wrap((String.valueOf(System.currentTimeMillis()) + " "
+										+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + " "
+										+ temp.get().getHrefString() + "\r\n").toString().getBytes("UTF-8")));
 							}
+						} catch (Exception e) { // TODO: handle exception
+						
 						}
+//						IOUtils.instance.writeStr2ReplaceFileSync(
+//								(String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
+//										+ String.valueOf(temp.get().getBb()) + " " + temp.get().getHrefString() + "\r\n"),
+//								fileChannel1, ioListener);
+//
+//						stringBuffer.append((String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
+//								+ String.valueOf(temp.get().getBb()) + " " + temp.get().getHrefString() + "\r\n"));
 						temp.set(temp.get()
 								.setIndex1(temp.get().getStr1().indexOf(tokenString, temp.get().getIndex1() + 4)));
 					}
@@ -188,21 +277,54 @@ class Eu {
 
 						temp.set(temp.get().setHrefString(
 								temp.get().getString4().substring(temp.get().getString4().lastIndexOf("<a href=\""))));
-						synchronized (tokenString) {
+
+//						try {
+//							synchronized (tokenString) {
+//								IOUtils.instance
+//								.writeStr2ReplaceFileSync(
+//										(String.valueOf(System.currentTimeMillis()) + " "
+//												+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + " "
+//												+ temp.get().getHrefString() + "\r\n"),
+//										pathFile, ioListener);
+////								fileChannel1.write(ByteBuffer.wrap((String.valueOf(System.currentTimeMillis()) + " "
+////										+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + " "
+////										+ temp.get().getHrefString() + "\r\n").toString().getBytes("UTF-8")));
+////								fileOutputStream1.flush();
+//							}
+//						} catch (Exception e) { // TODO: handle exception
+//							temp.set(temp.get()
+//									.setIndex2(temp.get().getStr1().indexOf(tokenString2, temp.get().getIndex2() + 4)));
+//						}
+//						IOUtils.instance.writeStr2ReplaceFileSync(
+//								(String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
+//										+ String.valueOf(temp.get().getBb()) + " " + temp.get().getHrefString() + "\r\n"),
+//								fileChannel1, ioListener);
 						try {
-							fileChannel1.write(ByteBuffer.wrap((String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
-									+ String.valueOf(temp.get().getBb()) + " " + temp.get().getHrefString() + "\r\n").toString().getBytes("UTF-8")));
-
+							synchronized (tokenString) {
+								fileChannel1.write(ByteBuffer.wrap((String.valueOf(System.currentTimeMillis()) + " "
+										+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + " "
+										+ temp.get().getHrefString() + "\r\n").toString().getBytes("UTF-8")));
+							}
 						} catch (Exception e) { // TODO: handle exception
-
+						
 						}
+//						stringBuffer.append((String.valueOf(System.currentTimeMillis()) + " " + String.valueOf(aa) + " "
+//								+ String.valueOf(temp.get().getBb()) + " " + temp.get().getHrefString() + "\r\n"));
 						temp.set(temp.get()
 								.setIndex2(temp.get().getStr1().indexOf(tokenString2, temp.get().getIndex2() + 4)));
 					}
+
 				}
+
+//					try {
+//						synchronized (tokenString) {
+//							fileChannel1.write(ByteBuffer.wrap((String.valueOf(System.currentTimeMillis()) + " "
+//									+ String.valueOf(aa) + " " + String.valueOf(temp.get().getBb()) + "\r\n").toString()
+//											.getBytes("UTF-8")));
+//							fileOutputStream1.flush();
+
 			}
 		}
-	}
 	}
 
 //	@Test
@@ -216,16 +338,16 @@ class Eu {
 		ThreadPoolExecutor cachedThreadPool = new ThreadPoolExecutor(size, size, Long.MAX_VALUE, TimeUnit.MILLISECONDS,
 				new LinkedBlockingQueue<Runnable>(32));
 
-		FileOutputStream fileOutputStream = new FileOutputStream(file,true);
-		fileOutputStream.flush();
+		final FileOutputStream fileOutputStream = new FileOutputStream(pathFile);
 		final FileChannel fileChannel = fileOutputStream.getChannel();
 //		int i = 2;
 //			152540
 //		int k = 150773;
 //		while (k <= 152539) {
 		for (int i = 0; i < size; i++) {
-			cachedThreadPool.execute(new MyThread(i, fileChannel), Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+			cachedThreadPool.execute(new MyThread(fileChannel), Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 		}
+		System.out.println(stringBuffer);
 
 //		}
 

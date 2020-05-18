@@ -23,17 +23,13 @@ import com.gyx.sp.redis.RedisUtils;
 
 @RestController
 @RequestMapping("/iwant")
-public class IwantController implements ApplicationContextAware {
-
+public class IwantController  {
+	private static Logger Logger = LoggerFactory.getLogger(IwantController.class);
 
 
 	@Autowired
 	private RedisUtils redisUtils;
 
-//	@Autowired
-//	Logger LOG;
-//	@Autowired
-//	Eu eu;
 	
 	@RequestMapping(value = "/in",produces="application/json;charset=UTF-8")
 	public List in(Iwant iwant) {
@@ -59,21 +55,17 @@ public class IwantController implements ApplicationContextAware {
 		redisUtils.set("aa", "bb");
 		if(iwant.getName().equals("郭永雄")) {
 			try {
-				Eu.main();
+//				Eu.main();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		Logger.info("HELLO");
 		return redisUtils.hMultiGet(iwant.getName(), arrayList);
-//		return (String) redisUtils.get("aa");
-//		RedisUtils.hMultiGet(iwant.getName(), arrayList)
+
 	}
 	
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		// TODO Auto-generated method stub
 
-	}
 }
