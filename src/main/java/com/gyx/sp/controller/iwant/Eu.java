@@ -22,7 +22,7 @@ import org.springframework.http.HttpHeaders;
 
 class Eu {
 	static String tokenString = "memor";
-	static String tokenString2 ="谢思娜";
+	static String tokenString2 ="AAAAA";
 	static String contentTokenString = "发私信";
 	static File pathFile = new File("log.txt");
 	static int size = 25;
