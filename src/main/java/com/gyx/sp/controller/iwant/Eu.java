@@ -31,7 +31,7 @@ class Eu {
 	static StringBuffer stringBuffer = new StringBuffer();
 
 	/**
-	 * @author gyx
+	 * @author gyx 776295498@QQ.COM
 	 *
 	 */
 
