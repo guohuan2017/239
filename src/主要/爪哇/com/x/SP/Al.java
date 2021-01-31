@@ -6,7 +6,7 @@ public class Al {
 	public static void main(String[]args){
 		Scanner s = new Scanner(System.in);
 		while(true) {
-			System.out.print("输入你的姓名：");
+			System.out.print("输入英文：");
 			String name = s.nextLine().toLowerCase();
 			int sum = 0;
 			for(int j = 0; j< name.length();j++) {
